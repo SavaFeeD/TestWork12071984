@@ -11,14 +11,13 @@ use App\Http\Requests\user\UserIdRequest;
 
 class UserController extends Controller
 {
-    public function index(UserIdRequest$request) {
-      $user_id = $request->user_id;
+    public function index(Request $request) {
       $user = User::where('api_token', $request->bearerToken())->first();
-      if ($user->id."" != $request->user_id and $user->role != 'admin')
+      if ($user->role != 'admin')
         return response()->json([
           'status' => false,
           'body' => [
-            'message' => 'Неправильный токен'
+            'message' => 'Вы не админ'
           ]
         ]);
       return response()->json(User::all());
@@ -40,7 +39,7 @@ class UserController extends Controller
       return self::deleteItem(User::class, $request, $id, 'Пользователь удален');
     }
 
-    public function update_user( $request, $id) {
+    public function update(Request $request, $id) {
       return self::updateItem(User::class, $request, $id, 'Данные пользователя обновлены');
     }
 

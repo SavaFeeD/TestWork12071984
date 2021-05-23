@@ -86,17 +86,36 @@ export default createStore({
 
     updateRow({commit}, data) {
       axios({
-        method: "get",
+        method: "post",
         url: `${api}/${data.table}/update/${data.id}`,
+        data: data.req,
         headers: {
           'Content-type': "application/json; charset=UTF-8",
           'Authorization': `Bearer ${localStorage.token.substr(1, localStorage.token.length-2)}`
         }
       }).then(res => {
-        console.log(res.data);
         commit('SET_EditAdmin', true)
-        commit('SET_ALERT', ['message', 'Обновлено']);
+        commit('SET_ALERT', ['message', res.data.body.message]);
       }).catch(error => {
+        console.log(error);
+      });
+    },
+
+    createRow({commit}, data) {
+      console.log(data);
+      axios({
+        method: "post",
+        url: `${api}/${data.table}/create`,
+        data: data.req,
+        headers: {
+          'Content-type': "application/json; charset=UTF-8",
+          'Authorization': `Bearer ${localStorage.token.substr(1, localStorage.token.length-2)}`
+        }
+      }).then(res => {
+        commit('SET_EditAdmin', true)
+        commit('SET_ALERT', ['message', res.data.body.message]);
+      }).catch(error => {
+        commit('SET_ALERT', ['message', 'Заполните все нужные поля']);
         console.log(error);
       });
     },

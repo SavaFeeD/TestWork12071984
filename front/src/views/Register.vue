@@ -45,10 +45,11 @@ export default {
 
   methods: {
     reg() {
+
       if (this.name.length < 4) {
         this.$store.dispatch('setAlert', 'Имя меньше 4 символов')
-      } else if (this.password < 4) {
-        this.$store.dispatch('setAlert', 'Пароль меньше 4 символов')
+      } else if (this.password.length < 6) {
+        this.$store.dispatch('setAlert', 'Пароль меньше 6 символов')
       } else if (this.password == this.password_confirm) {
         let data = {
           email: this.email,
@@ -58,7 +59,7 @@ export default {
 
         this.$store.dispatch('Register', data);
       } else {
-        console.log('no');
+        this.$store.dispatch('setAlert', 'Эхх..')
       }
     }
   }

@@ -21,7 +21,6 @@ class CreatePostsTable extends Migration
             $table->string('description');
             $table->string('img')->nullable();
             $table->float('rate')->nullable();
-            $table->timestamps();
         });
     }
 

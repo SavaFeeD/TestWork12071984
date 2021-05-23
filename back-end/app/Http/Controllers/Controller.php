@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\User;
+use App\Models\File;
 
 class Controller extends BaseController
 {
@@ -19,7 +20,7 @@ class Controller extends BaseController
           return response()->json([
             'status' => false,
             'body' => [
-              'message' => 'Токен не приндлежит админу'
+              'message' => 'Вы не админ'
             ]
           ]);
       }
@@ -44,19 +45,26 @@ class Controller extends BaseController
       ], 200);
     }
 
-    public static function update($MODEL, $request, $id, $message = 'Данные обновились') {
+    public static function updateItem($MODEL, $request, $id, $message = 'Данные обновились') {
       $user = User::where('api_token', $request->bearerToken())->first();
 
       if ($user->role != 'admin') {
           return response()->json([
             'status' => false,
             'body' => [
-              'message' => 'Токен не приндлежит админу'
+              'message' => 'Вы не админ'
             ]
           ]);
       }
 
-      $MODEL::whereId($id)->update($request->all());
+      $data = $request->all();
+      if (isset($request->img) and $request->img != null and $request->img != '') {
+        $img_name = File::createFile($request->img);
+        $img_url = File::getFile($img_name);
+        $data['img'] = $img_url;
+      }
+
+      $MODEL::whereId($id)->update($data);
 
       return response()->json([
           'status' => true,
