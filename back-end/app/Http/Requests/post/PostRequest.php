@@ -6,7 +6,7 @@ use App\Http\Requests\ApiBaseRequest;
 
 class PostRequest extends ApiBaseRequest
 {
-    
+
     public function rules()
     {
         return [
